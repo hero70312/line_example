@@ -2,6 +2,43 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
+const cheerio = require('cheerio')
+var request = require('request');
+
+
+var today_verse;
+//
+// function doEveryDay() {
+//     request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
+//         console.log('error:', error); // Print the error if one occurred
+//         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+//         console.log('body:', body); // Print the HTML for the Google homepage.
+//         var str = body;
+//         var n = str.indexOf("MyJSStringVar");
+//         var d = str.indexOf("var div = document.getElementById('c_cont');");
+//         console.log(n);
+//         console.log(d);
+//         var verse = str.substring( n + 16, d - 5);
+//         console.log(verse);
+//         today_verse = verse;
+//     });
+// }
+
+request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    console.log('body:', body); // Print the HTML for the Google homepage.
+    var str = body;
+    var n = str.indexOf("MyJSStringVar");
+    var d = str.indexOf("var div = document.getElementById('c_cont');");
+    console.log(n);
+    console.log(d);
+    var verse = str.substring( n + 16, d - 5);
+    console.log(verse);
+    today_verse = verse;
+});
+
+
 
 // create LINE SDK config from env variables
 const config = {
@@ -42,7 +79,10 @@ function handleEvent(event) {
   }
 
   // create a echoing text message
-  const echo = { type: 'text', text: `${event.message.text}${new Date()}`  };
+  // const echo = { type: 'text', text: `${event.message.text}${new Date()}`  };
+  const echo = { type: 'text', text: `${today_verse}  ${new Date().toLocaleDateString()}`};
+
+  console.log('client', client);
 
   // use reply API
   return client.replyMessage(event.replyToken, echo);
