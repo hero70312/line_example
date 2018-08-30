@@ -41,6 +41,7 @@ request('http://www.duranno.tw/livinglife/index.php/daily', function (error, res
     // console.log(verse);
     today_verse = verse.replace(/([";.*+^$[\]\\(){}-])/g,'');
     today_range = $('.range').text().replace(/ /g,'');
+    today_range = today_range.replace(/\n/g,'');
     // console.log(today_verse);
     let a = `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`
     console.log(a);
