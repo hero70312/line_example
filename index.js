@@ -39,7 +39,8 @@ request('http://www.duranno.tw/livinglife/index.php/daily', function (error, res
     // console.log(d);
     var verse = str.substring( n + 16, d - 5);
     // console.log(verse);
-    today_verse = verse;
+    today_verse = verse.replace(/([";.*+^$[\]\\(){}-])/g,'');
+    // console.log(today_verse);
 });
 
 
