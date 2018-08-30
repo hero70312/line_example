@@ -7,6 +7,10 @@ var request = require('request');
 
 
 var today_verse;
+
+console.log(new Date().toLocaleDateString('ar-zh'));
+console.log(new Date().toLocaleDateString('zh'));
+// console.log(new Date().toLocaleDateString('zh'));
 //
 // function doEveryDay() {
 //     request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
@@ -25,16 +29,16 @@ var today_verse;
 // }
 
 request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
-    console.log('error:', error); // Print the error if one occurred
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    console.log('body:', body); // Print the HTML for the Google homepage.
+    // console.log('error:', error); // Print the error if one occurred
+    // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    // console.log('body:', body); // Print the HTML for the Google homepage.
     var str = body;
     var n = str.indexOf("MyJSStringVar");
     var d = str.indexOf("var div = document.getElementById('c_cont');");
-    console.log(n);
-    console.log(d);
+    // console.log(n);
+    // console.log(d);
     var verse = str.substring( n + 16, d - 5);
-    console.log(verse);
+    // console.log(verse);
     today_verse = verse;
 });
 
@@ -80,7 +84,7 @@ function handleEvent(event) {
 
   // create a echoing text message
   // const echo = { type: 'text', text: `${event.message.text}${new Date()}`  };
-  const echo = { type: 'text', text: `${today_verse}  ${new Date().toLocaleDateString()}`};
+  const echo = { type: 'text', text: `${today_verse}  ${new Date().toLocaleDateString('zh')}`};
 
   console.log('client', client);
 
