@@ -124,7 +124,7 @@ function handleEvent(event) {
         case keywords.greeting_goodnight:
         case keywords.greeting_hi:
         case keywords.greeting_hi_chinese:
-            echo = {type: 'text', text: `${reply.greeting}`};
+            echo = {type: 'text', text: `${event.message.text}`};
             break;
         default:
             echo = {type: 'text', text: `${reply.useless}`};
