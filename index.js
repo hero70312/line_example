@@ -3,27 +3,42 @@
 const line = require('@line/bot-sdk');
 const express = require('express');
 const cheerio = require('cheerio')
-var request = require('request');
+const request = require('request');
 
 
 var today_range;
 var today_verse;
 
-// function doEveryDay() {
-//     request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
-//         console.log('error:', error); // Print the error if one occurred
-//         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-//         console.log('body:', body); // Print the HTML for the Google homepage.
-//         var str = body;
-//         var n = str.indexOf("MyJSStringVar");
-//         var d = str.indexOf("var div = document.getElementById('c_cont');");
-//         console.log(n);
-//         console.log(d);
-//         var verse = str.substring( n + 16, d - 5);
-//         console.log(verse);
-//         today_verse = verse;
-//     });
-// }
+
+const updateVerse = function () {
+    request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
+        // console.log('error:', error); // Print the error if one occurred
+        // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        // console.log('body:', body); // Print the HTML for the Google homepage.
+        const $ = cheerio.load(body);
+        // console.log();
+
+        var str = body;
+        var n = str.indexOf("MyJSStringVar");
+        var d = str.indexOf("var div = document.getElementById('c_cont');");
+        // console.log(n);
+        // console.log(d);
+        var verse = str.substring( n + 16, d - 5);
+        // console.log(verse);
+        today_verse = verse.replace(/([";.*+^$[\]\\(){}-])/g,'');
+        today_range = $('.range').text().replace(/ /g,'');
+        today_range = today_range.replace(/\n/g,'');
+        // console.log(today_verse);
+        let a = `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`
+        console.log(a);
+    });
+}
+
+let time = 1000*60*60;
+
+
+setInterval(updateVerse, time);
+
 
 request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
     // console.log('error:', error); // Print the error if one occurred
