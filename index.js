@@ -6,6 +6,20 @@ const cheerio = require('cheerio')
 const request = require('request');
 
 
+const keywords = {
+    qt:'我要QT',
+    song:'來一首詩歌',
+    good:'給予肯定',
+    verse:'來一句經文',
+    wait:'尚未開放',
+}
+
+const reply = {
+    thanks:'謝謝你的鼓勵',
+    sorry:'很抱歉，功能尚未開放',
+}
+
+
 var today_range;
 var today_verse;
 
@@ -102,12 +116,22 @@ function handleEvent(event) {
     return Promise.resolve(null);
   }
 
-  // create a echoing text message
+    let echo = { type: 'text', text: `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`};
+
+    switch (event.message.text){
+      case keywords.qt:
+          echo = { type: 'text', text: `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`};
+          break;
+      case keywords.good:
+          echo = { type: 'text', text: `${reply.thanks}`};
+          break;
+      case keywords.wait:
+          echo = { type: 'text', text: `${reply.sorry}`};
+          break;
+      default:
+          break;
+  }
   // const echo = { type: 'text', text: `${event.message.text}${new Date()}`  };
-  const echo = { type: 'text', text: `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`};
-
-  console.log('client', client);
-
   // use reply API
   return client.replyMessage(event.replyToken, echo);
 }
