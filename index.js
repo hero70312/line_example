@@ -15,6 +15,7 @@ const keywords = {
     greeting_goodmorning: '早安',
     greeting_goodnight: '晚安',
     greeting_hi: 'hi',
+    greeting_Hi: 'Hi',
     greeting_hi_chinese: '嗨',
 }
 
@@ -123,6 +124,7 @@ function handleEvent(event) {
         case keywords.greeting_goodmorning:
         case keywords.greeting_goodnight:
         case keywords.greeting_hi:
+        case keywords.greeting_Hi:
         case keywords.greeting_hi_chinese:
             echo = {type: 'text', text: `${event.message.text}`};
             break;
