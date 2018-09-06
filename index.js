@@ -17,6 +17,7 @@ const keywords = {
 const reply = {
     thanks:'謝謝你的鼓勵',
     sorry:'很抱歉，功能尚未開放',
+    useless:'很抱歉，我不知道你想要什麼',
 }
 
 
@@ -116,7 +117,7 @@ function handleEvent(event) {
     return Promise.resolve(null);
   }
 
-    let echo = { type: 'text', text: `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`};
+    let echo;
 
     switch (event.message.text){
       case keywords.qt:
@@ -129,6 +130,7 @@ function handleEvent(event) {
           echo = { type: 'text', text: `${reply.sorry}`};
           break;
       default:
+          echo = { type: 'text', text: `${reply.useless}`};
           break;
   }
   // const echo = { type: 'text', text: `${event.message.text}${new Date()}`  };
