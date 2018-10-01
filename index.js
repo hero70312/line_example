@@ -4,6 +4,7 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 const cheerio = require('cheerio')
 const request = require('request');
+const randomInt = require('random-int');
 
 const keywords = {
     qt: '我要QT',
@@ -18,6 +19,14 @@ const keywords = {
     greeting_Hi: 'Hi',
     greeting_hi_chinese: '嗨',
 }
+
+const youtubeLinks = [
+    'https://www.youtube.com/watch?v=E7i6c54KEfc&ab_channel=HillsongWorship',
+    'https://www.youtube.com/watch?v=pIf6j-WeyFw&ab_channel=HillsongWorship',
+    'https://www.youtube.com/watch?v=rW9MbYQrTUI&ab_channel=HillsongWorship',
+    'https://www.youtube.com/watch?v=Q7JsK50NGaA&list=RDrW9MbYQrTUI&index=4&ab_channel=HillsongWorship',
+]
+
 
 const reply = {
     thanks: '謝謝你的鼓勵',
@@ -35,7 +44,7 @@ const updateVerse = function () {
         // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         // console.log('body:', body); // Print the HTML for the Google homepage.
         const $ = cheerio.load(body);
-        // console.log();
+        console.log();
 
         var str = body;
         var n = str.indexOf("MyJSStringVar");
@@ -52,6 +61,8 @@ const updateVerse = function () {
         console.log(a);
     });
 }
+
+updateVerse();
 
 let time = 1000 * 60 * 60;
 
@@ -113,6 +124,9 @@ function handleEvent(event) {
     switch (event.message.text) {
         case keywords.qt:
             echo = {type: 'text', text: `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`};
+            break;
+        case keywords.song:
+            echo = {type: 'text', text: `${youtubeLinks[randomInt(0,youtubeLinks.length-1)]}`};
             break;
         case keywords.good:
             echo = {type: 'text', text: `${reply.thanks}`};
