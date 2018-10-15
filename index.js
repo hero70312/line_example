@@ -27,6 +27,7 @@ const youtubeLinks = [
     'https://www.youtube.com/watch?v=Q7JsK50NGaA&list=RDrW9MbYQrTUI&index=4&ab_channel=HillsongWorship',
 ]
 
+const church_link = 'http://www.changelife.org.tw/sermonsMorningDevotions.php';
 
 const reply = {
     thanks: '謝謝你的鼓勵',
@@ -123,7 +124,7 @@ function handleEvent(event) {
 
     switch (event.message.text) {
         case keywords.qt:
-            echo = {type: 'text', text: `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`};
+            echo = {type: 'text', text: `${new Date().toLocaleDateString('zh')}\n${today_range}\n${today_verse}\n${church_link}`};
             break;
         case keywords.song:
             echo = {type: 'text', text: `${youtubeLinks[randomInt(0,youtubeLinks.length-1)]}`};
@@ -143,7 +144,8 @@ function handleEvent(event) {
             echo = {type: 'text', text: `${event.message.text}`};
             break;
         default:
-            echo = {type: 'text', text: `${reply.useless}`};
+            return;
+            // echo = {type: 'text', text: `${reply.useless}`};
             break;
     }
 
