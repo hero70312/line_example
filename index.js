@@ -29,6 +29,8 @@ const youtubeLinks = [
 
 const church_link = 'http://www.changelife.org.tw/sermonsMorningDevotions.php';
 
+const share = '牧師分享：'
+
 const reply = {
     thanks: '謝謝你的鼓勵',
     sorry: '很抱歉，功能尚未開放',
@@ -124,7 +126,7 @@ function handleEvent(event) {
 
     switch (event.message.text) {
         case keywords.qt:
-            echo = {type: 'text', text: `${new Date().toLocaleDateString('zh')}\n${today_range}\n${today_verse}\n${church_link}`};
+            echo = {type: 'text', text: `${new Date().toLocaleDateString('zh')}\n${today_range}\n${today_verse}\n${share}\n${church_link}`};
             break;
         case keywords.song:
             echo = {type: 'text', text: `${youtubeLinks[randomInt(0,youtubeLinks.length-1)]}`};
