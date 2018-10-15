@@ -42,8 +42,13 @@ let a = '\u2764';
 
 var book_code = '1F4D6;';
 var mic_code = '1F399;';
+var music_code = '1F3B5';
+var sun_code = '2600';
 let book = String.fromCodePoint(parseInt(book_code, 16));
 let mic = String.fromCodePoint(parseInt(mic_code, 16));
+let music = String.fromCodePoint(parseInt(music_code, 16));
+let sun = String.fromCodePoint(parseInt(sun_code, 16));
+
 
 var today_range;
 var today_verse;
@@ -133,7 +138,7 @@ function handleEvent(event) {
 
     switch (event.message.text) {
         case keywords.qt:
-            echo = {type: 'text', text: `${new Date().toLocaleDateString('zh')}\n${today_range}\n${book}${today_verse}\n${mic}${share}\n\n${church_link}`};
+            echo = {type: 'text', text: `${new Date().toLocaleDateString('zh')}\n${book}${today_range}\n\n${today_verse}\n\n${mic}${share}\n${church_link}`};
             break;
         case keywords.song:
             echo = {type: 'text', text: `${youtubeLinks[randomInt(0,youtubeLinks.length-1)]}`};
