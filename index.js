@@ -12,6 +12,7 @@ const keywords = {
     good: '給予肯定',
     verse: '來一句經文',
     wait: '尚未開放',
+    serve: '服事表',
     greeting_morning: '早',
     greeting_goodmorning: '早安',
     greeting_goodnight: '晚安',
@@ -48,7 +49,7 @@ let book = String.fromCodePoint(parseInt(book_code, 16));
 let mic = String.fromCodePoint(parseInt(mic_code, 16));
 let music = String.fromCodePoint(parseInt(music_code, 16));
 let sun = String.fromCodePoint(parseInt(sun_code, 16));
-
+let serve_list = 'https://goo.gl/pJYa7k';
 
 var today_range;
 var today_verse;
@@ -137,6 +138,9 @@ function handleEvent(event) {
     let echo;
 
     switch (event.message.text) {
+        case keywords.serve:
+            echo = {type: 'text', text: `${serve_list}`};
+            break;
         case keywords.qt:
             echo = {type: 'text', text: `${new Date().toLocaleDateString('zh')}\n${book}${today_range}\n\n${today_verse}\n\n${mic}${share}\n${church_link}`};
             break;
