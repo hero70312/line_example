@@ -5,6 +5,29 @@ const express = require('express');
 const cheerio = require('cheerio')
 const request = require('request');
 const randomInt = require('random-int');
+const path    = require("path");
+const Config = require("./constants/constant");
+const fs = require('fs');
+const GoogleDriveService = require("./service/googleDrive");
+
+
+function initUploadFolders(folders) {
+
+    return folders.map(function (pathToCreate) {
+        pathToCreate
+            .split('/')
+            .reduce((currentPath, folder) => {
+                currentPath += folder + '/';
+                if (!fs.existsSync(currentPath)) {
+                    fs.mkdirSync(currentPath);
+                }
+                return currentPath;
+            }, '');
+    });
+}
+
+initUploadFolders(['csv']);
+
 
 const keywords = {
     qt: '我要QT',
@@ -30,7 +53,7 @@ const youtubeLinks = [
 
 const church_link = 'http://www.changelife.org.tw/sermonsMorningDevotions.php';
 
-const share = '牧師分享：'
+const share = '牧師分享：';
 
 const reply = {
     thanks: '謝謝你的鼓勵',
@@ -74,7 +97,7 @@ const updateVerse = function () {
         today_range = today_range.replace(/\n/g, '');
         // console.log(today_verse);
         let a = `${today_range}\n${today_verse}\n${new Date().toLocaleDateString('zh')}`
-        console.log(a);
+        // console.log(a);
     });
 }
 
@@ -83,7 +106,6 @@ updateVerse();
 let time = 1000 * 60 * 60;
 
 setInterval(updateVerse, time);
-
 
 request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
     // console.log('error:', error); // Print the error if one occurred
@@ -103,20 +125,33 @@ request('http://www.duranno.tw/livinglife/index.php/daily', function (error, res
     today_range = today_range.replace(/\n/g, '');
 });
 
-const config = {
-    channelAccessToken: 'gOMQj8Pnd70xqcnXf8vLXngiGiDjTYRD/E4yVVGFKNdw7NuTL8r5e5PE52OoopXW+AXo3ikuiAOZlbhX0Ho3jB3V6OjN17XwpNrvcwV9xZvAINwrSTXFXYL0j02ri6eABydyMDuqxub4b3GUCshcBQdB04t89/1O/w1cDnyilFU=',
-    channelSecret: '240565389320d52d465935a8d45759f3',
-};
 
-const client = new line.Client(config);
+const client = new line.Client(Config.line);
 
 const app = express();
 
-app.get('/', function (req, res) {
-    res.send('Hello World!');
+// allow CORS
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization,locale");
+    res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+    next();
 });
 
-app.post('/callback', line.middleware(config), (req, res) => {
+
+app.get('/test',async function (req, res) {
+    await new GoogleDriveService().uploadFile({
+        fileName: 'test.aac',
+        filePath: 'csv/test.aac'
+    });
+});
+
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname+'/index.html'));
+});
+
+
+app.post('/callback', line.middleware(Config.line), (req, res) => {
     console.log('req', req)
     Promise
         .all(req.body.events.map(handleEvent))

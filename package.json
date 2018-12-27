@@ -2,7 +2,7 @@
   "name": "echo-bot",
   "version": "0.0.0",
   "description": "An example LINE bot just to echo messages",
-  "main": "index.js",
+  "main": "other/active.js",
   "scripts": {
     "start": "node ."
   },
@@ -10,6 +10,7 @@
     "@line/bot-sdk": "^5.0.0",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.3",
+    "googleapis": "^27.0.0",
     "random-int": "^1.0.0",
     "request": "^2.88.0"
   }
