@@ -102,8 +102,8 @@ const client = new line.Client(Config.line);
 
 const app = express();
 
-// HTTP:413 Request Entity Too Large. => 要確認 express request 預設的最大上限 , 目前設定 100mb
-app.use(bodyParser.json({limit: '100mb'}));
+// // HTTP:413 Request Entity Too Large. => 要確認 express request 預設的最大上限 , 目前設定 100mb
+// app.use(bodyParser.json({limit: '100mb'}));
 
 // allow CORS
 app.use(function (req, res, next) {
@@ -170,7 +170,7 @@ function handleEvent(event) {
 }
 
 // set public folder as site root
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 const port = process.env.PORT || 3000;
 
