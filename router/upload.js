@@ -4,9 +4,9 @@ const router = require('express').Router();
 const GoogleDriveService = require("../service/googleDrive");
 const errorWrapper = require('../utils/errorWrapper');
 //
-// router.get('/', async (req, res) => {
-//     res.redirect('/index.html');
-// });
+router.get('/', async (req, res) => {
+    res.redirect('/index.html');
+});
 
 router.post('/', errorWrapper(async (req, res) => {
 
