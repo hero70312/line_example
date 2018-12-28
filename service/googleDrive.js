@@ -20,29 +20,32 @@ const oauth2Client = getOauth2Client();
 
 class GoogleDriveService {
 
-    async uploadFile({filePath, fileName}) {
+    async uploadFile({fileBase64, fileName, userName, fileFormat, songName}) {
+
+        fs.writeFileSync(`audio/${fileFormat}.${fileFormat}`, fileBase64.replace(/^data:.*;base64,/, ''), 'base64');
+
 
         const drive = google.drive({version: 'v3', auth: oauth2Client});
 
-
         let fileMetadata = {
-            'name': fileName,
+            name: `${songName}-${userName}.${fileFormat}`,
             parents: ['1ReBbwE1PeI_ufqpe5WFaRDgpMkHaOf18']
         };
 
         const res = await drive.files.create({
             resource:fileMetadata,
             requestBody: {
-                name: fileName,
+                name: `${songName}-${userName}.${fileFormat}`,
                 parents: ['1ReBbwE1PeI_ufqpe5WFaRDgpMkHaOf18'],
-                mimeType: 'text/csv'
+                mimeType: `audio/${fileFormat}`
             },
             media: {
-                mimeType: 'audio/aac',
-                body: fs.createReadStream(filePath)
+                mimeType: `audio/${fileFormat}`,
+                body: fs.createReadStream(`audio/${fileFormat}.${fileFormat}`)
             }
         });
         console.log(res);
+        return {};
     }
 
     async uploadCsv({filePath, fileName}) {
