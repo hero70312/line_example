@@ -7,54 +7,41 @@ const request = require('request');
 const randomInt = require('random-int');
 const bodyParser = require('body-parser');
 const Config = require("./constants/constant");
+var moment = require('moment');
+const urlExists = require("url-exists");
+const {youtubeLinks, keywords, reply, church_link} = require("./constants/property");
 
-const keywords = {
-    qt: '我要QT',
-    song: '來一首詩歌',
-    good: '給予肯定',
-    verse: '來一句經文',
-    wait: '尚未開放',
-    serve: '服事表',
-    greeting_morning: '早',
-    greeting_goodmorning: '早安',
-    greeting_goodnight: '晚安',
-    greeting_hi: 'hi',
-    greeting_Hi: 'Hi',
-    greeting_hi_chinese: '嗨',
-}
-
-const youtubeLinks = [
-    'https://www.youtube.com/watch?v=E7i6c54KEfc&ab_channel=HillsongWorship',
-    'https://www.youtube.com/watch?v=pIf6j-WeyFw&ab_channel=HillsongWorship',
-    'https://www.youtube.com/watch?v=rW9MbYQrTUI&ab_channel=HillsongWorship',
-    'https://www.youtube.com/watch?v=Q7JsK50NGaA&list=RDrW9MbYQrTUI&index=4&ab_channel=HillsongWorship',
-]
-
-const church_link = 'http://www.changelife.org.tw/sermonsMorningDevotions.php';
+const app = express();
 
 const share = '牧師分享：';
-
-const reply = {
-    thanks: '謝謝你的鼓勵',
-    sorry: '很抱歉，功能尚未開放',
-    useless: '很抱歉，我不知道你想要什麼',
-    greeting: 'Hi, 很高興認識你',
-}
 
 let a = '\u2764';
 
 var book_code = '1F4D6;';
 var mic_code = '1F399;';
-var music_code = '1F3B5';
-var sun_code = '2600';
 let book = String.fromCodePoint(parseInt(book_code, 16));
 let mic = String.fromCodePoint(parseInt(mic_code, 16));
-let music = String.fromCodePoint(parseInt(music_code, 16));
-let sun = String.fromCodePoint(parseInt(sun_code, 16));
 let serve_list = 'https://goo.gl/pJYa7k';
 
 var today_range;
 var today_verse;
+
+let global_exist;
+let specific_url;
+
+const updateTodayURL = function (url) {
+    urlExists(url, function(err, exists) {
+        global_exist = exists;
+
+        let audioFilePath = "http://www.changelife.org.tw/data/files/morning_bible_study/"
+
+        let today_str =  moment().format("YYYYMMDD");
+
+        specific_url = exists ?  audioFilePath + today_str + '.mp3' : "";
+
+        console.log(specific_url);
+    });
+}
 
 const updateVerse = function () {
     request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
@@ -80,27 +67,15 @@ const updateVerse = function () {
 }
 
 updateVerse();
+updateTodayURL();
 
 let time = 1000 * 60 * 60;
 
 setInterval(updateVerse, time);
-
-request('http://www.duranno.tw/livinglife/index.php/daily', function (error, response, body) {
-    const $ = cheerio.load(body);
-
-    let str = body;
-    let n = str.indexOf("MyJSStringVar");
-    let d = str.indexOf("var div = document.getElementById('c_cont');");
-    let verse = str.substring(n + 16, d - 5);
-    today_verse = verse.replace(/([";.*+^$[\]\\(){}-])/g, '');
-    today_range = $('.range').text().replace(/ /g, '');
-    today_range = today_range.replace(/\n/g, '');
-});
-
+setInterval(updateTodayURL, time);
 
 const client = new line.Client(Config.line);
 
-const app = express();
 
 // // HTTP:413 Request Entity Too Large. => 要確認 express request 預設的最大上限 , 目前設定 100mb
 // app.use(bodyParser.json({limit: '100mb'}));
@@ -141,7 +116,7 @@ function handleEvent(event) {
             echo = {type: 'text', text: `${serve_list}`};
             break;
         case keywords.qt:
-            echo = {type: 'text', text: `${new Date().toLocaleDateString('zh')}\n${book}${today_range}\n\n${today_verse}\n\n${mic}${share}\n${church_link}`};
+            echo = {type: 'text', text: `${new Date().toLocaleDateString('zh')}\n${book}${today_range}\n\n${today_verse}\n\n${mic}${share}\n${church_link}\n${specific_url}`};
             break;
         case keywords.song:
             echo = {type: 'text', text: `${youtubeLinks[randomInt(0,youtubeLinks.length-1)]}`};
